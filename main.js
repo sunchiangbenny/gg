@@ -30,14 +30,49 @@ function draw(){
  }
 // 執行 draw 函式
 setInterval(draw, 1000/FPS);
+
+var enemyPath = [
+{x:96,y:448},
+{x:96,y:64},
+{x:384,y:64},
+{x:384,y:192},
+{x:224,y:192},
+{x:224,y:320},
+{x:544,y:320},
+{x:544,y:96},
+
+]
+
 var enemy = {
 	x: 96,
 	y: 448,
 	speedX:0,
 	speedY:-64,
+	pathDes:0,
 	move: function(){
-     this.x +=this.speedX/FPS;
-     this.y +=this.speedY/FPS;
+      if(isCollided( enemyPath[this.pathDes].x , enemyPath[this.pathDes].y , this.x , this.y , 64/FPS , 64/FPS)){
+      this.x = enemyPath[this.pathDes].x;
+      this.y = enemyPath[this.pathDes].y;
+      this.pathDes++;
+      if( enemyPath[this.pathDes].y < this.y){
+         this.speedX=0;
+         this.speedY=-64;
+      }else if( enemyPath[this.pathDes].x > this.x){
+      	 this.speedX=64;
+         this.speedY=0;
+      }else if(enemyPath[this.pathDes].y > this.y){
+      	 this.speedX=0;
+      	 this.speedY=64;
+      }else if(enemyPath[this.pathDes].x < this.x){
+         this.speedX=-64;
+         this.speedY=0;
+      }
+      }else{
+          	this.x +=this.speedX/FPS;
+            this.y +=this.speedY/FPS;
+
+          }
+
 	}
 }
 
@@ -74,7 +109,17 @@ function mouseclick(){
 	}
 }
 
-
+function isCollided(pointX,pointY,targetX,targetY,targetWidth,targetHeight){
+    if(targetX <= pointX &&
+    	          pointX <= targetX + targetWidth &&
+       targetY <= pointY &&
+    	          pointY <= targetY + targetHeight){
+    return true;
+    }else{
+    return false;
+    }
+    
+}
 
 
 
